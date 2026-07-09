@@ -19,10 +19,6 @@ var modules = [
   "src/games/shooter.js",
   "src/games/breakout.js",
   "src/games/dodger.js",
-  "src/leaderboard/config.js",
-  "src/leaderboard/session.js",
-  "src/leaderboard/client.js",
-  "src/leaderboard/ui.js",
   "src/registry.js"
 ];
 
@@ -33,10 +29,7 @@ function readFile(relPath) {
 }
 
 // Extract the implementation body between "## IMPLEMENTATION ##" and "## EXPORT ##".
-// For registry.js we also grab normalizeKeyAction / createGameRegistry / bootArcade.
 function extractImpl(source, fileLabel) {
-  // Registry has a special marker section that *also* includes the dep section
-  // but its impl block is still between ## IMPLEMENTATION ## and ## EXPORT ##.
   var implStart = source.indexOf("## IMPLEMENTATION ##");
   var exportStart = source.indexOf("## EXPORT ##");
 
@@ -49,7 +42,6 @@ function extractImpl(source, fileLabel) {
 
   var body = source.slice(implStart, exportStart).trim();
 
-  // Remove trailing whitespace / blank lines
   return "\n  // ====== " + fileLabel + " ======\n" + body;
 }
 
@@ -81,12 +73,6 @@ var output = [
   '    createShooterGame: createShooterGame,',
   '    createBreakoutGame: createBreakoutGame,',
   '    createDodgerGame: createDodgerGame,',
-  '    createLeaderboardPanel: createLeaderboardPanel,',
-  '    renderLeaderboardPanelHtml: renderLeaderboardPanelHtml,',
-  '    normalizeApiUrl: normalizeApiUrl,',
-  '    getLeaderboardConfig: getLeaderboardConfig,',
-  '    createSessionStore: createSessionStore,',
-  '    createLeaderboardClient: createLeaderboardClient,',
   '    bootArcade: bootArcade',
   '  };',
   '});',
@@ -100,4 +86,4 @@ var output = [
 ].join("\n");
 
 fs.writeFileSync(path.join(ROOT, "arcade.js"), output, "utf8");
-console.log("\u2714 arcade.js built from " + modules.length + " source modules");
+console.log("✔ arcade.js built from " + modules.length + " source modules");

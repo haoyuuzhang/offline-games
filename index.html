@@ -86,74 +86,6 @@
         gap: 8px;
       }
 
-      .leaderboard-panel {
-        border-top: 2px solid var(--line);
-        padding-top: 12px;
-      }
-
-      .leaderboard-card {
-        display: grid;
-        gap: 8px;
-      }
-
-      .leaderboard-card h3 {
-        margin: 0;
-        color: var(--yellow);
-        font-size: 16px;
-      }
-
-      .leaderboard-message,
-      .best-score,
-      .leaderboard-empty {
-        margin: 0;
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .login-grid {
-        display: grid;
-        gap: 6px;
-      }
-
-      .login-grid input {
-        min-height: 36px;
-        border: 2px solid var(--line);
-        background: #09111f;
-        color: var(--text);
-        padding: 0 8px;
-        font: inherit;
-      }
-
-      .player-line {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-      }
-
-      .leaderboard-list {
-        display: grid;
-        gap: 4px;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-      }
-
-      .leaderboard-list li {
-        display: grid;
-        grid-template-columns: 34px minmax(0, 1fr) auto;
-        gap: 6px;
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .leaderboard-list strong {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        color: var(--text);
-      }
-
       button {
         font: inherit;
         color: var(--text);
@@ -345,7 +277,6 @@
           <p class="subtitle">随时开一局的本地像素街机</p>
         </div>
         <nav id="gameList" class="game-list" aria-label="游戏列表"></nav>
-        <div id="leaderboardPanel" class="leaderboard-panel"></div>
       </aside>
 
       <section class="playfield" aria-label="游戏画面">
@@ -383,11 +314,6 @@
       </section>
     </main>
 
-    <script>
-      window.ArcadeConfig = {
-        leaderboardApiUrl: ""
-      };
-    </script>
     <script src="src/shared/rng.js"></script>
     <script src="src/shared/render.js"></script>
     <script src="src/games/snake.js"></script>
@@ -395,10 +321,6 @@
     <script src="src/games/shooter.js"></script>
     <script src="src/games/breakout.js"></script>
     <script src="src/games/dodger.js"></script>
-    <script src="src/leaderboard/config.js"></script>
-    <script src="src/leaderboard/session.js"></script>
-    <script src="src/leaderboard/client.js"></script>
-    <script src="src/leaderboard/ui.js"></script>
     <script src="src/registry.js"></script>
     <script>
       window.addEventListener("DOMContentLoaded", function () {
