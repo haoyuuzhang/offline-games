@@ -1,0 +1,412 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>离线街机合集</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #070b14;
+        --panel: #101827;
+        --panel-2: #162238;
+        --line: #28415f;
+        --text: #f8fbff;
+        --muted: #9db0c9;
+        --cyan: #70e3ff;
+        --green: #74f08a;
+        --pink: #ff5fa2;
+        --yellow: #ffd166;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Courier New", Consolas, monospace;
+        background:
+          linear-gradient(rgba(112, 227, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(112, 227, 255, 0.04) 1px, transparent 1px),
+          radial-gradient(circle at top left, rgba(255, 95, 162, 0.16), transparent 32rem),
+          var(--bg);
+        background-size: 24px 24px, 24px 24px, auto, auto;
+        color: var(--text);
+      }
+
+      .app {
+        width: min(1180px, calc(100% - 24px));
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 18px 0;
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+        gap: 16px;
+        align-items: stretch;
+      }
+
+      .sidebar,
+      .playfield,
+      .controls {
+        border: 2px solid var(--line);
+        background: rgba(16, 24, 39, 0.92);
+        box-shadow: 0 0 0 4px rgba(112, 227, 255, 0.04), 0 18px 50px rgba(0, 0, 0, 0.3);
+      }
+
+      .sidebar {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .brand {
+        border-bottom: 2px solid var(--line);
+        padding-bottom: 14px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 30px;
+        line-height: 1;
+        color: var(--cyan);
+        text-shadow: 3px 3px 0 rgba(255, 95, 162, 0.35);
+      }
+
+      .subtitle {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .game-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .leaderboard-panel {
+        border-top: 2px solid var(--line);
+        padding-top: 12px;
+      }
+
+      .leaderboard-card {
+        display: grid;
+        gap: 8px;
+      }
+
+      .leaderboard-card h3 {
+        margin: 0;
+        color: var(--yellow);
+        font-size: 16px;
+      }
+
+      .leaderboard-message,
+      .best-score,
+      .leaderboard-empty {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .login-grid {
+        display: grid;
+        gap: 6px;
+      }
+
+      .login-grid input {
+        min-height: 36px;
+        border: 2px solid var(--line);
+        background: #09111f;
+        color: var(--text);
+        padding: 0 8px;
+        font: inherit;
+      }
+
+      .player-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .leaderboard-list {
+        display: grid;
+        gap: 4px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .leaderboard-list li {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr) auto;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .leaderboard-list strong {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--text);
+      }
+
+      button {
+        font: inherit;
+        color: var(--text);
+        background: var(--panel-2);
+        border: 2px solid var(--line);
+        min-height: 44px;
+        cursor: pointer;
+      }
+
+      button:hover,
+      button.active {
+        border-color: var(--cyan);
+        color: var(--cyan);
+        box-shadow: inset 0 0 0 2px rgba(112, 227, 255, 0.14);
+      }
+
+      .game-list button {
+        width: 100%;
+        padding: 10px;
+        text-align: left;
+        display: grid;
+        gap: 4px;
+      }
+
+      .game-list span {
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .game-list small {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .playfield {
+        min-width: 0;
+        padding: 14px;
+        display: grid;
+        grid-template-rows: auto minmax(320px, 1fr) auto;
+        gap: 12px;
+      }
+
+      .topbar,
+      .stats,
+      .button-row,
+      .touch-pad {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .topbar {
+        justify-content: space-between;
+        border-bottom: 2px solid var(--line);
+        padding-bottom: 12px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 22px;
+        color: var(--yellow);
+      }
+
+      .stats {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .stats strong {
+        color: var(--green);
+      }
+
+      .screen {
+        position: relative;
+        min-height: 320px;
+        border: 2px solid #36577c;
+        background: #050913;
+        overflow: hidden;
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        min-height: 320px;
+      }
+
+      .controls {
+        padding: 12px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 14px;
+        align-items: center;
+      }
+
+      .button-row button,
+      .touch-pad button {
+        width: 72px;
+        height: 44px;
+        padding: 0;
+        text-align: center;
+      }
+
+      .touch-pad {
+        display: grid;
+        grid-template-columns: repeat(3, 48px);
+        grid-template-rows: repeat(3, 40px);
+        gap: 6px;
+      }
+
+      .touch-pad button {
+        width: 48px;
+        height: 40px;
+      }
+
+      .touch-pad [data-action="up"] {
+        grid-column: 2;
+      }
+
+      .touch-pad [data-action="left"] {
+        grid-column: 1;
+        grid-row: 2;
+      }
+
+      .touch-pad [data-action="rotate"] {
+        grid-column: 2;
+        grid-row: 2;
+      }
+
+      .touch-pad [data-action="right"] {
+        grid-column: 3;
+        grid-row: 2;
+      }
+
+      .touch-pad [data-action="down"] {
+        grid-column: 2;
+        grid-row: 3;
+      }
+
+      .hint {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 820px) {
+        .app {
+          grid-template-columns: 1fr;
+          padding: 12px 0;
+        }
+
+        .sidebar {
+          gap: 12px;
+        }
+
+        .game-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .controls {
+          grid-template-columns: 1fr;
+        }
+
+        .touch-pad {
+          justify-self: center;
+        }
+      }
+
+      @media (max-width: 520px) {
+        h1 {
+          font-size: 24px;
+        }
+
+        .game-list {
+          grid-template-columns: 1fr;
+        }
+
+        .button-row button {
+          flex: 1 1 86px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>离线<br>街机合集</h1>
+          <p class="subtitle">随时开一局的本地像素街机</p>
+        </div>
+        <nav id="gameList" class="game-list" aria-label="游戏列表"></nav>
+        <div id="leaderboardPanel" class="leaderboard-panel"></div>
+      </aside>
+
+      <section class="playfield" aria-label="游戏画面">
+        <header class="topbar">
+          <h2 id="gameTitle">默认游戏</h2>
+          <div class="stats">
+            <span>分数<strong id="scoreValue">0</strong></span>
+            <span>关卡<strong id="levelValue">1</strong></span>
+            <span id="hintValue">准备开始</span>
+          </div>
+        </header>
+
+        <div class="screen">
+          <canvas id="gameCanvas" width="960" height="640" aria-label="游戏画布"></canvas>
+        </div>
+
+        <footer class="controls">
+          <div>
+            <div class="button-row">
+              <button id="startButton" type="button">开始</button>
+              <button id="pauseButton" type="button">暂停</button>
+              <button id="resetButton" type="button">重开</button>
+            </div>
+            <p class="hint">键盘：方向键 / WASD 移动，1 / 2 / 3 选卡，R 重开，P 暂停，Z 旋转或交互</p>
+          </div>
+
+          <div id="touchPad" class="touch-pad" aria-label="触摸控制">
+            <button type="button" data-action="up">&uarr;</button>
+            <button type="button" data-action="left">&larr;</button>
+            <button type="button" data-action="rotate">Z</button>
+            <button type="button" data-action="right">&rarr;</button>
+            <button type="button" data-action="down">&darr;</button>
+          </div>
+        </footer>
+      </section>
+    </main>
+
+    <script>
+      window.ArcadeConfig = {
+        leaderboardApiUrl: ""
+      };
+    </script>
+    <script src="src/shared/rng.js"></script>
+    <script src="src/shared/render.js"></script>
+    <script src="src/games/snake.js"></script>
+    <script src="src/games/twenty48.js"></script>
+    <script src="src/games/shooter.js"></script>
+    <script src="src/games/breakout.js"></script>
+    <script src="src/games/dodger.js"></script>
+    <script src="src/leaderboard/config.js"></script>
+    <script src="src/leaderboard/session.js"></script>
+    <script src="src/leaderboard/client.js"></script>
+    <script src="src/leaderboard/ui.js"></script>
+    <script src="src/registry.js"></script>
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        window.Arcade.bootArcade();
+      });
+    </script>
+  </body>
+</html>
+
+
+
